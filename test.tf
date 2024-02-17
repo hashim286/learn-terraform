@@ -10,15 +10,15 @@ terraform {
 
 provider "aws" {
   region     = "us-east-1"
-  access_key = "AKIA6ODU6J6EGAM63QPG"
-  secret_key = "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"
+  access_key = "key_id"
+  secret_key = "key_value"
 
 }
 
 resource "aws_instance" "app_server" {
-  ami           = "ami-0e731c8a588258d0d"
+  ami           = "ami"
   instance_type = "t2.micro"
-  key_name      = "hr-test"
+  key_name      = "key_name"
   tags = {
     Name = "test"
   }
