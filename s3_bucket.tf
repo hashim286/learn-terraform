@@ -1,20 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
-    }
-  }
-  required_version = ">= 1.2.0"
-}
-
-provider "aws" {
-  region                   = "us-east-1"
-  shared_config_files      = ["C:/Users/hashim/.aws/config"]
-  shared_credentials_files = ["C:/Users/hashim/.aws/credentials"]
-  profile                  = "iamadmin-general"
-}
-
 resource "aws_s3_bucket" "hr-test-bucket-2024-02-17" {
   bucket = "hr-test-bucket-2024-02-17"
 
