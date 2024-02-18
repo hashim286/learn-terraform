@@ -10,13 +10,14 @@ terraform {
 
 provider "aws" {
   region                   = "us-east-1"
-  shared_config_files      = ["C:/Users/hrauf/.aws/config"]
-  shared_credentials_files = ["C:/Users/hrauf/.aws/credentials"]
+  shared_config_files      = ["C:/Users/hashim/.aws/config"]
+  shared_credentials_files = ["C:/Users/hashim/.aws/credentials"]
   profile                  = "iamadmin-general"
 }
 
 resource "aws_s3_bucket" "hr-test-bucket-2024-02-17" {
   bucket = "hr-test-bucket-2024-02-17"
+
   tags = {
     Name        = "My Bucket"
     Environment = "dev"
@@ -72,4 +73,23 @@ resource "aws_s3_object" "error" {
   source       = "error.html"
   content_type = "text/html"
 
+}
+
+data "aws_iam_policy_document" "example" {
+  statement {
+    sid     = "1"
+    actions = ["s3:*"]
+    resources = [
+      "${aws_s3_bucket.hr-test-bucket-2024-02-17.arn}/*",
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "example" {
+  bucket = aws_s3_bucket.hr-test-bucket-2024-02-17.id
+  policy = data.aws_iam_policy_document.example.json
 }
