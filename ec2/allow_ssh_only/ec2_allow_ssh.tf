@@ -1,20 +1,4 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
-    }
-  }
-  required_version = ">= 1.2.0"
-}
-
-provider "aws" {
-  region                   = "us-east-1"
-  shared_config_files      = ["C:/Users/hrauf/.aws/config"]
-  shared_credentials_files = ["C:/Users/hrauf/.aws/credentials"]
-  profile                  = "iamadmin-general"
-}
-
+# creates security group for the instance
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allows SSH from any source IP"
@@ -24,6 +8,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
+# permits only SSH traffic ingress to the instance
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
   security_group_id = aws_security_group.allow_ssh.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -32,6 +17,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
   ip_protocol       = "tcp"
 }
 
+# permits all traffic egress from the instance
 resource "aws_vpc_security_group_egress_rule" "allow_all_ipv4" {
   security_group_id = aws_security_group.allow_ssh.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -40,12 +26,26 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_ipv4" {
   ip_protocol       = "-1"
 }
 
-resource "aws_instance" "app_server" {
+# creates ec2 instance
+resource "aws_instance" "ec2_server" {
   ami                    = "ami-0e731c8a588258d0d"
   instance_type          = "t2.micro"
   key_name               = "hr-test"
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-  tags = {
+  
+  # Names the instance
+  tags = { 
     Name = "test"
   }
+}
+
+# ssh command to run
+output "ssh_cmd" {
+  value       = "Make sure you are in the directory with the private key file!\nssh ec2-user@${aws_instance.ec2_server.public_ip} -m hmac-sha2-512 -i '${aws_instance.ec2_server.key_name}.pem'"
+  description = "Public IP of server"
+}
+
+# Listing public IP 
+output "instance_ip_addr" {
+  value = aws_instance.ec2_server.public_ip
 }
