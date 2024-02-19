@@ -1,6 +1,3 @@
 .terraform/
 terraform*
 .terraform*
-ec2/allow_ssh/config.tf
-s3/s3_static_website/config.tf
-config*
