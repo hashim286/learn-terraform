@@ -32,9 +32,9 @@ resource "aws_instance" "ec2_server" {
   instance_type          = "t2.micro"
   key_name               = "hr-test"
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-  
+
   # Names the instance
-  tags = { 
+  tags = {
     Name = "test"
   }
 }
@@ -42,10 +42,11 @@ resource "aws_instance" "ec2_server" {
 # ssh command to run
 output "ssh_cmd" {
   value       = "Make sure you are in the directory with the private key file!\nssh ec2-user@${aws_instance.ec2_server.public_ip} -m hmac-sha2-512 -i '${aws_instance.ec2_server.key_name}.pem'"
-  description = "Public IP of server"
+  description = "ssh command to run after instance creation"
 }
 
 # Listing public IP 
 output "instance_ip_addr" {
-  value = aws_instance.ec2_server.public_ip
+  value       = aws_instance.ec2_server.public_ip
+  description = "Public IP of server"
 }
