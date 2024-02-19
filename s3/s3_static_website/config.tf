@@ -11,6 +11,6 @@ terraform {
 provider "aws" {
   region                   = "us-east-1"
   shared_config_files      = ["C:/Users/hashim/.aws/config"]
-  shared_credentials_files = ["C:/Users/hashim/.aws/credentials"]
+  shared_credentials_files = ["C:/Users//.aws/credentials"]
   profile                  = "iamadmin-general"
 }
