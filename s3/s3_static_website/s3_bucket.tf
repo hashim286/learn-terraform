@@ -13,9 +13,9 @@ data "aws_iam_policy_document" "example" { # define IAM policy to permit public 
 }
 
 resource "aws_s3_bucket_policy" "example" { # attaching policy made above to bucket, use depends on to tell terraform that this requires public access to be granted before this can be attached to bucket
-  bucket = aws_s3_bucket.hr-test-bucket-2024-02-17.id
-  policy = data.aws_iam_policy_document.example.json
-  depends_on = [ aws_s3_bucket_public_access_block.allow_public_read ]
+  bucket     = aws_s3_bucket.hr-test-bucket-2024-02-17.id
+  policy     = data.aws_iam_policy_document.example.json
+  depends_on = [aws_s3_bucket_public_access_block.allow_public_read]
 }
 
 resource "aws_s3_bucket" "hr-test-bucket-2024-02-17" { # creates the bucket
@@ -60,3 +60,6 @@ resource "aws_s3_object" "error" { # uploads object to s3
   content_type = "text/html"
 }
 
+output "s3_url" {
+  value = "http://${aws_s3_bucket_website_configuration.static_website.website_endpoint}"
+}
